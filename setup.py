@@ -12,7 +12,7 @@ DESCRIPTION = "PyTest-API Python Web Framework built for testing purposes."
 EMAIL = "sturzaam@gmail.com"
 AUTHOR = "Andrew Sturza"
 REQUIRES_PYTHON = ">=3.6.0"
-VERSION = "0.0.5"
+VERSION = "0.0.7"
 REQUIRED = [
     "Jinja2==2.11.3",
     "parse==1.19.0",

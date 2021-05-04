@@ -10,8 +10,8 @@ class Open(object):
     _specification = {
         "openapi": "3.0.2",
         "info": {
-            "title": "Location Database",
-            "description": "Swagger specification for documenting the Location Database API",
+            "title": "PyTest-API",
+            "description": "Swagger specification for documenting the API",
             "version": "0.0.1",
         },
         "servers": [{"url": "http://localhost"}],
