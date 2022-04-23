@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "pytest_api"
+version = "0.1.0"
+description = "An ASGI middleware to populate OpenAPI Specification examples from pytest functions"
+authors = ["Andrew Sturza <sturzaam@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pytest = "^7.1.1"
+PyYAML = "^6.0"
+
+[tool.poetry.dev-dependencies]
+fastapi = "^0.75.2"
+pytest = "^7.1.1"
+uvicorn = "^0.17.6"
+requests = "^2.27.1"
+black = "^22.3.0"
+isort = "^5.10.1"
+flake8 = "^4.0.1"
+bandit = "^1.7.4"
+safety = "^1.10.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
