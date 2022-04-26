@@ -7,9 +7,6 @@ spec = SpecificationMiddleware
 
 app.add_middleware(spec)
 
-app.openapi = spec.custom_openapi
-
-
 @app.get("/")
 def default_route():
     return {"message": "OK"}
