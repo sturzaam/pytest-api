@@ -1,9 +1,8 @@
-from pprint import pprint
-from io import UnsupportedOperation
-
 import pytest
-from test_app.main import spec
+
 from pytest_api.specification import BEHAVIORS
+from test_app.main import spec
+
 
 @spec.describe
 def test_default_route(client):
@@ -19,6 +18,7 @@ def test_default_route(client):
     assert in_content(client, path, response.status_code, test_default_route.__doc__)
     assert "/" in BEHAVIORS
 
+
 @spec.describe(route="/health-check/", status_code=200)
 def test_health_check(client):
     """
@@ -32,13 +32,16 @@ def test_health_check(client):
     assert in_content(client, path, response.status_code, test_health_check.__doc__)
     assert "/health-check/" in BEHAVIORS
 
+
 def test_consequences(client):
     with pytest.warns() as miss_behaved:
         client.get("/missing-description-decorator")
-    assert "The consequence for not describing a behavior" in str(miss_behaved[0].message.args[0])
+    assert "The consequence for not describing a behavior" in str(
+        miss_behaved[0].message.args[0]
+    )
+    assert "/missing-description-decorator" not in BEHAVIORS
+
 
 def in_content(client, path, status_code, doc):
-    for route in filter(
-        lambda route: route.path == path, client.app.router.routes
-    ):
+    for route in filter(lambda route: route.path == path, client.app.router.routes):
         return route.responses[status_code]["content"]["description"] == doc

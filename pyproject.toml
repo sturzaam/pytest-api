@@ -1,8 +1,12 @@
 [tool.poetry]
 name = "pytest_api"
-version = "0.1.0"
+version = "0.1.1"
 description = "An ASGI middleware to populate OpenAPI Specification examples from pytest functions"
 authors = ["Andrew Sturza <sturzaam@gmail.com>"]
+readme = 'README.md'
+keywords = ["fastapi", "pytest"]
+homepage = "https://github.com/sturzaam/pytest-api"
+repository = "https://github.com/sturzaam/pytest-api"
 license = "MIT"
 
 [tool.poetry.dependencies]
