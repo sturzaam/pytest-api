@@ -1,3 +1,3 @@
-from .specification import SpecificationMiddleware
+from .specification import BEHAVIORS, ROUTES, SpecificationMiddleware
 
-__all__ = ["SpecificationMiddleware"]
+__all__ = ["SpecificationMiddleware", "BEHAVIORS", "ROUTES"]
