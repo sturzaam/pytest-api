@@ -2,12 +2,12 @@ import operator
 from multiprocessing.managers import BaseManager, BaseProxy
 
 
-class Responses:
+class Examples:
     def add(self, path, response):
         self.__dict__[path] = response
 
-    def list(self):
-        return [response for response in self.__dict__.items()]
+    def to_list(self):
+        return [self.__dict__.values()]
 
 
 class RoutesProxy(BaseProxy):

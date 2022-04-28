@@ -3,24 +3,32 @@ import subprocess  # nosec
 import warnings
 from multiprocessing import freeze_support
 
-from .concurency import BehaviorManager, Responses, RoutesProxy, get_operator_module
+from fastapi.openapi.utils import get_openapi
+from .concurency import BehaviorManager, Examples
 from .types import ASGIApp
 
 BEHAVIORS = dict()
+BehaviorManager.register("examples", Examples)
+BehaviorManager.register("get_openapi", get_openapi)
+behavior_manager = BehaviorManager()
 
-BehaviorManager.register("responses", Responses)
-BehaviorManager.register("operator", get_operator_module)
-manager = BehaviorManager()
+
+#app = behavior_manager.App()
+# examples = behavior_manager.examples()
+# BehaviorManager.register("responses", Responses)
+# BehaviorManager.register("spec", SpecificationMiddleware)
+# BehaviorManager.register("operator", get_operator_module)
+# BehaviorManager.register(
+#     "routes", self._responses.list(), proxytype=RoutesProxy
+# )
+# behavior_manager = BehaviorManager()
 
 
 class SpecificationMiddleware:
     def __init__(self, app: ASGIApp):
         self._app = app
-        manager.start()
-        self._responses = manager.responses()
-        BehaviorManager.register(
-            "routes", self._responses.list(), proxytype=RoutesProxy
-        )
+        #self._examples = behavior_manager.examples()
+        #behavior_manager.start()
         subprocess.Popen(["pytest", "tests", "-rP", "-vv"])  # nosec
 
     async def __call__(self, scope, send, receive):
@@ -34,13 +42,27 @@ class SpecificationMiddleware:
             doc, status_code = BEHAVIORS[self._path]
             self.set_app_route()
             self.update_responses(doc, status_code)
-            setattr(self._responses, self._path, self.app_route.responses)
+            #setattr(self._examples, self._path, self.app_route.responses)
 
         await self._app(scope, send, receive)
 
-    @property
-    def routes(self):
-        return [item for item in self._responses.list()]
+    @classmethod
+    def get_openapi_behaviors(cls, app):
+        spec = cls(app)
+        if spec._app.openapi_schema:
+            return spec._app.openapi_schema
+        openapi_schema = get_openapi(
+            title="Custom title",
+            version="2.5.0",
+            description="This is a very custom OpenAPI schema",
+            routes=spec._app.routes,
+        )
+        openapi_schema["info"]["x-logo"] = {
+            "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
+        }
+        spec._app.openapi_schema = openapi_schema
+        return spec._app.openapi_schema
+
 
     def set_app_route(self):
         for app_route in self._app.app.app.routes:
