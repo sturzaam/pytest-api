@@ -1,3 +1,4 @@
-from .specification import BEHAVIORS, ROUTES, SpecificationMiddleware
+from .asgi import BEHAVIORS, ROUTES, ASGIMiddleware
+from .wsgi import WSGIMiddleware
 
-__all__ = ["SpecificationMiddleware", "BEHAVIORS", "ROUTES"]
+__all__ = ["ASGIMiddleware", "WSGIMiddleware", "BEHAVIORS", "ROUTES"]

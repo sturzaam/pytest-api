@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
-from pytest_api import SpecificationMiddleware
+from pytest_api import ASGIMiddleware
 
 app = FastAPI()
-spec = SpecificationMiddleware
+spec = ASGIMiddleware
 
 app.add_middleware(spec)
 

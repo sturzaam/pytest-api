@@ -13,6 +13,7 @@ license = "MIT"
 python = "^3.8"
 pytest = "^7.1.1"
 PyYAML = "^6.0"
+defusedxml = "^0.7.1"
 
 [tool.poetry.dev-dependencies]
 fastapi = "^0.75.2"
@@ -24,6 +25,8 @@ isort = "^5.10.1"
 flake8 = "^4.0.1"
 bandit = "^1.7.4"
 safety = "^1.10.3"
+pre-commit = "^2.18.1"
+pytest-cov = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

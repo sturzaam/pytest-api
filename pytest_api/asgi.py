@@ -10,7 +10,7 @@ BEHAVIORS = dict()
 ROUTES = dict()
 
 
-class SpecificationMiddleware:
+class ASGIMiddleware:
     def __init__(self, app: ASGIApp):
         self._app = app
 

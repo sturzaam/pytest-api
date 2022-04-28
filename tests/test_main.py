@@ -1,7 +1,7 @@
 import pytest
 
 from pytest_api import BEHAVIORS
-from test_app.main import spec
+from test_app.fast_api import spec
 
 
 @spec.describe
