@@ -1,38 +1,20 @@
 import functools
-import subprocess  # nosec
 import warnings
-from multiprocessing import freeze_support
 
+import pytest
 from fastapi.openapi.utils import get_openapi
-from .concurency import BehaviorManager, Examples
+
 from .types import ASGIApp
 
 BEHAVIORS = dict()
-BehaviorManager.register("examples", Examples)
-BehaviorManager.register("get_openapi", get_openapi)
-behavior_manager = BehaviorManager()
-
-
-#app = behavior_manager.App()
-# examples = behavior_manager.examples()
-# BehaviorManager.register("responses", Responses)
-# BehaviorManager.register("spec", SpecificationMiddleware)
-# BehaviorManager.register("operator", get_operator_module)
-# BehaviorManager.register(
-#     "routes", self._responses.list(), proxytype=RoutesProxy
-# )
-# behavior_manager = BehaviorManager()
+ROUTES = dict()
 
 
 class SpecificationMiddleware:
     def __init__(self, app: ASGIApp):
         self._app = app
-        #self._examples = behavior_manager.examples()
-        #behavior_manager.start()
-        subprocess.Popen(["pytest", "tests", "-rP", "-vv"])  # nosec
 
     async def __call__(self, scope, send, receive):
-        freeze_support()
         self._path = scope["path"]
         if self._path not in BEHAVIORS:
             warnings.warn(
@@ -42,27 +24,31 @@ class SpecificationMiddleware:
             doc, status_code = BEHAVIORS[self._path]
             self.set_app_route()
             self.update_responses(doc, status_code)
-            #setattr(self._examples, self._path, self.app_route.responses)
 
         await self._app(scope, send, receive)
 
     @classmethod
-    def get_openapi_behaviors(cls, app):
-        spec = cls(app)
-        if spec._app.openapi_schema:
-            return spec._app.openapi_schema
-        openapi_schema = get_openapi(
-            title="Custom title",
-            version="2.5.0",
-            description="This is a very custom OpenAPI schema",
-            routes=spec._app.routes,
-        )
-        openapi_schema["info"]["x-logo"] = {
-            "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
-        }
-        spec._app.openapi_schema = openapi_schema
-        return spec._app.openapi_schema
+    def openapi_behaviors(cls, app):
+        def custome_openapi():
+            if app.openapi_schema:
+                return app.openapi_schema
+            pytest.main(["-x", "tests", "-rP", "-vv"])
+            for route in app.routes:
+                if route.path in ROUTES:
+                    route.responses.update(ROUTES[route.path])
+            openapi_schema = get_openapi(
+                title="Custom title",
+                version="2.5.0",
+                description="This is a very custom OpenAPI schema",
+                routes=app.routes,
+            )
+            openapi_schema["info"]["x-logo"] = {
+                "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
+            }
+            app.openapi_schema = openapi_schema
+            return app.openapi_schema
 
+        return custome_openapi
 
     def set_app_route(self):
         for app_route in self._app.app.app.routes:
@@ -76,10 +62,10 @@ class SpecificationMiddleware:
         self.app_route.responses.update(
             {
                 status_code: {
+                    "description": doc,
                     "content": {
-                        "application/xml": {"example": {"message": "OK"}},
-                        "description": doc,
-                    }
+                        "application/json": {"example": {"message": "OK"}},
+                    },
                 }
             }
         )

@@ -10,7 +10,7 @@ PyTest-API is an [ASGI middleware](https://asgi.readthedocs.io/en/latest/specs/m
 ```shell
 pip install pytest-api
 ```
-
+or 
 ```
 poetry add --dev pytest-api
 ```
@@ -55,7 +55,11 @@ def default_route():
     return {"message": "OK"}
 ```
 
-Run the FastAPI app via:
+Run FastAPI app:
 ```bash
-uvicorn main:app --reload
+poetry run uvicorn test_app.main:app --reload
 ```
+
+Open your browser to http://localhost:8000/docs#/ too find the doc string is populated into the description.
+
+![Your doc string will now be populated into the description.](./OpenAPI.png)

@@ -1,7 +1,6 @@
-from pprint import pprint
 import pytest
 
-from pytest_api import BEHAVIORS, behavior_manager
+from pytest_api import BEHAVIORS
 from test_app.main import spec
 
 
@@ -18,7 +17,7 @@ def test_default_route(client):
     assert response.json() == {"message": "OK"}
     assert in_content(client, path, response.status_code, test_default_route.__doc__)
     assert "/" in BEHAVIORS
-    assert behavior_manager.examples
+
 
 @spec.describe(route="/health-check/", status_code=200)
 def test_health_check(client):
@@ -33,7 +32,6 @@ def test_health_check(client):
     assert in_content(client, path, response.status_code, test_health_check.__doc__)
     assert "/" in BEHAVIORS
     assert "/health-check/" in BEHAVIORS
-    #pprint(behavior_manager.examples().to_list())
 
 
 def test_consequences(client):
@@ -47,4 +45,4 @@ def test_consequences(client):
 
 def in_content(client, path, status_code, doc):
     for route in filter(lambda route: route.path == path, client.app.router.routes):
-        return route.responses[status_code]["content"]["description"] == doc
+        return route.responses[status_code]["description"] == doc
