@@ -1,2 +1,2 @@
 [run]
-omit = venv/*,test_pytest-api.py,conftest.py,app.py
+omit = venv/*,test_pytest-api.py,conftest.py,app.py, pytest_api/wsgi.py

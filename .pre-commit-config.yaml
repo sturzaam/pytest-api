@@ -46,7 +46,7 @@ repos:
     hooks:
       - id: system
         name: Coverage
-        entry: poetry run coverage report # --fail-under=90
+        entry: poetry run coverage report --fail-under=90
         pass_filenames: false
         language: system
   # - repo: local
