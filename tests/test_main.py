@@ -1,6 +1,6 @@
 import pytest
 
-from pytest_api import BEHAVIORS
+from pytest_api import BEHAVIORS, OPEN_API
 from test_app.fast_api import spec
 
 
@@ -15,8 +15,8 @@ def test_default_route(client):
     response = client.get(path)
     assert response.status_code == 200
     assert response.json() == {"message": "OK"}
-    assert in_content(client, path, response.status_code, test_default_route.__doc__)
-    assert "/" in BEHAVIORS
+    assert path in BEHAVIORS
+    assert response_description(path, "get", response.status_code, test_default_route)
 
 
 @spec.describe(route="/health-check/", status_code=200)
@@ -29,9 +29,26 @@ def test_health_check(client):
     path = "/health-check/"
     response = client.get(path)
     assert response.json() == {"message": "OK"}
-    assert in_content(client, path, response.status_code, test_health_check.__doc__)
-    assert "/" in BEHAVIORS
-    assert "/health-check/" in BEHAVIORS
+    assert path in BEHAVIORS
+    assert response_description(path, "get", response.status_code, test_health_check)
+
+
+@spec.describe(route="/behavior-example/", status_code=200, method="post")
+def test_example_body(client):
+    """
+    GIVEN behavior in body
+    WHEN example behavior endpoint is called with POST method
+    THEN response with status 200 and body OK is returned
+    """
+    path = "/behavior-example/"
+    response = client.post(
+        path,
+        json={"name": "behavior"},
+    )
+    assert response.json() == {"message": "OK"}
+    assert path in BEHAVIORS
+    assert response_description(path, "post", response.status_code, test_example_body)
+    assert request_body_example_description(path, "post", test_example_body)
 
 
 def test_consequences(client):
@@ -43,6 +60,17 @@ def test_consequences(client):
     assert "/missing-description-decorator" not in BEHAVIORS
 
 
-def in_content(client, path, status_code, doc):
-    for route in filter(lambda route: route.path == path, client.app.router.routes):
-        return route.responses[status_code]["description"] == doc
+def response_description(path, method, status_code, func):
+    return (
+        OPEN_API["paths"][path][method]["responses"][status_code]["description"]
+        == func.__doc__
+    )
+
+
+def request_body_example_description(path, method, func):
+    return (
+        OPEN_API["paths"][path][method]["requestBody"]["content"]["application/json"][
+            "examples"
+        ][func.__name__]["description"]
+        == func.__doc__
+    )

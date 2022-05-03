@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 from pytest_api import ASGIMiddleware
 
@@ -17,4 +18,13 @@ def default_route():
 
 @app.get("/health-check/")
 def health_check():
+    return {"message": "OK"}
+
+
+class Behavior(BaseModel):
+    name: str
+
+
+@app.post("/behavior-example/")
+async def example_body(behavior: Behavior):
     return {"message": "OK"}
