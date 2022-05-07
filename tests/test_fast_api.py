@@ -12,14 +12,14 @@ def test_default_route(client):
     THEN response with status 200 and body OK is returned
     """
     path = "/"
-    response = client.get(path)
+    response = client.get(path, headers={"spec-description": test_default_route.id})
     assert response.status_code == 200
     assert response.json() == {"message": "OK"}
     assert path in BEHAVIORS
     assert response_description(path, "get", response.status_code, test_default_route)
 
 
-@spec.describe(route="/health-check/", status_code=200)
+@spec.describe(route="/health-check/")
 def test_health_check(client):
     """
     GIVEN "/health-check/"
@@ -27,13 +27,13 @@ def test_health_check(client):
     THEN response with status 200 and body OK is returned
     """
     path = "/health-check/"
-    response = client.get(path)
+    response = client.get(path, headers={"spec-description": test_health_check.id})
     assert response.json() == {"message": "OK"}
     assert path in BEHAVIORS
     assert response_description(path, "get", response.status_code, test_health_check)
 
 
-@spec.describe(route="/behavior-example/", status_code=200, method="post")
+@spec.describe(route="/behavior-example/")
 def test_example_body(client):
     """
     GIVEN behavior in body
@@ -42,12 +42,10 @@ def test_example_body(client):
     """
     path = "/behavior-example/"
     response = client.post(
-        path,
-        json={"name": "behavior"},
+        path, json={"name": "behavior"}, headers={"spec-example": test_example_body.id}
     )
     assert response.json() == {"message": "OK"}
     assert path in BEHAVIORS
-    assert response_description(path, "post", response.status_code, test_example_body)
     assert request_body_example_description(path, "post", test_example_body)
 
 
