@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from typing import Optional
+
+from fastapi import FastAPI, Header
 from pydantic import BaseModel
 
 from pytest_api import ASGIMiddleware
@@ -26,5 +28,5 @@ class Behavior(BaseModel):
 
 
 @app.post("/behavior-example/")
-async def example_body(behavior: Behavior):
+async def example_body(behavior: Behavior, custom: Optional[str] = Header(None)):
     return {"message": "OK"}

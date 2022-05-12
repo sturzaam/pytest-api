@@ -53,7 +53,9 @@ def handle_request_body(body: Any, path: AnyStr, method: AnyStr, func: Callable)
     try:
         request_body_exampl(path, method)[func.__name__] = example
     except KeyError as e:
-        if method in e.args:
+        if path in e.args:
+            init_path_method(path, method)
+        elif method in e.args:
             init_method(path, method, func)
         elif "requestBody" in e.args:
             init_request_body(path, method, func)
@@ -92,7 +94,9 @@ def to_json_schema(body: Any, name: AnyStr):
     schema = {}
     schema[name] = {"type": "object"}
     schema[name]["properties"] = {}
-    if name not in OPEN_API["components"]["schemas"].keys():
+    if "components" not in OPEN_API:
+        OPEN_API["components"] = {"schemas": {name: schema[name]}}
+    elif name not in OPEN_API["components"]["schemas"].keys():
         OPEN_API["components"]["schemas"][name] = schema[name]
     for key, value in body.items():
         if isinstance(value, list):
@@ -137,6 +141,10 @@ def init_responses(path, method, status_code):
 
 def init_path(path, method, status_code):
     OPEN_API["paths"][path] = {method: {"responses": {status_code: {}}}}
+
+
+def init_path_method(path, method):
+    OPEN_API["paths"][path] = {method: {}}
 
 
 def init_method(path, method, func):

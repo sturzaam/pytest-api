@@ -42,11 +42,31 @@ def test_example_body(client):
     """
     path = "/behavior-example/"
     response = client.post(
-        path, json={"name": "behavior"}, headers={"spec-example": test_example_body.id}
+        path,
+        json={"name": "behavior"},
+        headers={"custom": "header", "spec-example": test_example_body.id},
     )
     assert response.json() == {"message": "OK"}
     assert path in BEHAVIORS
     assert request_body_example_description(path, "post", test_example_body)
+
+
+@spec.describe(route="/behavior-example/")
+def test_second_example_body(client):
+    """
+    GIVEN second behavior in body
+    WHEN example behavior endpoint is called with POST method
+    THEN response with status 200 and body OK is returned
+    """
+    path = "/behavior-example/"
+    response = client.post(
+        path,
+        json={"name": "second behavior"},
+        headers={"custom": "header", "spec-example": test_second_example_body.id},
+    )
+    assert response.json() == {"message": "OK"}
+    assert path in BEHAVIORS
+    assert request_body_example_description(path, "post", test_second_example_body)
 
 
 def test_consequences(client):
