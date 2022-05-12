@@ -43,8 +43,15 @@ def test_handle_request_method_exception():
     assert method in OPEN_API["paths"][path]
 
 
+def test_handle_request_path_exception():
+    assert "path" not in OPEN_API["paths"]
+    handle_request_body({}, "path", method, test_handle_request_path_exception)
+    assert method in OPEN_API["paths"]["path"]
+
+
 def test_to_json_schema():
-    assert "foo" not in OPEN_API["components"]["schemas"]
+    del OPEN_API["components"]
+    assert "components" not in OPEN_API
     to_json_schema(
         {
             "bar": [{"baz": "test"}, "biz"],
