@@ -98,3 +98,10 @@ When `pytest` calls your API the `SpecificationResponder` is looking for the cor
 ```
 
 This is possible thanks to python's first-class `functions` i.e. [Closure_(computer_programming)](https://en.wikipedia.org/wiki/Closure_(computer_programming)).
+
+## Contributing
+
+```python
+poetry install
+poetry run pytest
+```

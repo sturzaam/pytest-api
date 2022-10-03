@@ -1,7 +1,17 @@
-from typing import Any, AnyStr, Callable
+from typing import Any, AnyStr, Callable, Optional
+
+from pydantic import BaseModel
 
 BEHAVIORS = dict()
 OPEN_API = dict()
+
+
+class Components(BaseModel):
+    schemas = {}
+
+
+class OpenApi(BaseModel):
+    components: Optional[Components]
 
 
 def handle_responses(path: AnyStr, method: AnyStr, status_code: int, func: Callable):
