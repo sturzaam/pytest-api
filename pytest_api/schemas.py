@@ -7,11 +7,18 @@ OPEN_API = dict()
 
 
 class Schema(BaseModel):
-    pass
+    name: str
+    type: str = "object"
+
+    def __iter__(self):
+        key = self.name
+        schema = self
+        del schema.name
+        yield from {key: schema}.items()
 
 
 class Components(BaseModel):
-    schemas: Optional[Schema] = Schema()
+    schemas: Optional[Schema] = Schema(name="default")
 
 
 class OpenApi(BaseModel):

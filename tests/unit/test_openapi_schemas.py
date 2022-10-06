@@ -26,9 +26,13 @@ def test_openapi_schemas():
 
 def test_foo_schema():
     openApi = OpenApi()
-    foo = Schema()
-    m = openApi.components.copy(update={"schemas": {"foo": foo}})
+    m = openApi.components.copy(update={"schemas": dict(Schema(name="foo"))})
     assert "foo" in m.schemas.keys()
+    assert isinstance(m.schemas["foo"], Schema)
+
+    foo = m.schemas["foo"]
+    assert not hasattr(foo, "name")
+    assert foo.type == "object"
 
 
 def test_path():
