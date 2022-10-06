@@ -2,7 +2,7 @@ build:
 	poetry install
 
 development:
-	poetry run uvicorn test_app.main:app --reload
+	poetry run uvicorn test_app.fast_api:app --reload
 
 test:
 	poetry run pytest tests
