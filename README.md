@@ -103,5 +103,5 @@ This is possible thanks to python's first-class `functions` i.e. [Closure_(compu
 
 ```python
 poetry install
-poetry run pytest
+poetry run pre-commit
 ```
