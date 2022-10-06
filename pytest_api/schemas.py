@@ -11,9 +11,20 @@ class Schema(BaseModel):
 class Components(BaseModel):
     schemas: Optional[Schema] = Schema()
 
-
 class OpenApi(BaseModel):
     components: Optional[Components] = Components()
+
+class Path(BaseModel):
+    method: AnyStr
+
+class Method(BaseModel):
+    status_code: int
+
+class Status_Code(BaseModel):
+    func: Callable
+
+class Body(BaseModel):
+    path: AnyStr
 
 
 def handle_responses(path: AnyStr, method: AnyStr, status_code: int, func: Callable):
