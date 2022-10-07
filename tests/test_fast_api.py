@@ -43,7 +43,7 @@ def test_example_body(client):
     path = "/behavior-example/"
     response = client.post(
         path,
-        json={"name": "behavior"},
+        json={"name": "tanner"},
         headers={"custom": "header", "spec-example": test_example_body.id},
     )
     assert response.json() == {"message": "OK"}

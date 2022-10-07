@@ -6,9 +6,16 @@ BEHAVIORS = dict()
 OPEN_API = dict()
 
 
-class Schema(BaseModel):
-    name: str
+class Property(BaseModel):
+    title: str
     type: str = "object"
+    value: Optional[str]
+
+
+class Schema(BaseModel):
+    title: str
+    type: str = "object"
+    properties: Optional[Property]
 
     def __iter__(self):
         key = self.name
