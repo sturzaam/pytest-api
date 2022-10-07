@@ -18,14 +18,14 @@ class Schema(BaseModel):
     properties: Optional[Property]
 
     def __iter__(self):
-        key = self.name
+        key = self.title
         schema = self
-        del schema.name
+        del schema.title
         yield from {key: schema}.items()
 
 
 class Components(BaseModel):
-    schemas: Optional[Schema] = Schema(name="default")
+    schemas: Optional[Schema] = Schema(title="default")
 
 
 class OpenApi(BaseModel):
